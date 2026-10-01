@@ -427,3 +427,14 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Bi mat va cau hinh cuc bo (repo Public)
+appsettings.Development.json
+appsettings.Local.json
+.env
+*.pfx
+
+# Frontend
+node_modules/
+dist/
+build/
