@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using QLHopDongHoSo.API.Data;
 using QLHopDongHoSo.API.DTOs;
-
+using QLHopDongHoSo.API.Models;
 namespace QLHopDongHoSo.API.Services;
 
 public class AuthService : IAuthService
@@ -113,4 +113,36 @@ public class AuthService : IAuthService
         return new JwtSecurityTokenHandler()
             .WriteToken(token);
     }
+
+    public async Task<object?> RegisterAsync(RegisterRequest request)
+{
+    var existingUser = await _context.Users
+        .FirstOrDefaultAsync(u => u.Username == request.Username);
+
+    if (existingUser != null)
+    {
+        return null;
+    }
+
+    var user = new User
+    {
+        Username = request.Username,
+        PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+        FullName = request.FullName,
+        Email = request.Email,
+        RoleId = 2,
+        IsActive = true,
+        CreatedAt = DateTime.Now
+    };
+
+    _context.Users.Add(user);
+    await _context.SaveChangesAsync();
+
+    return new
+    {
+        message = "Đăng ký thành công",
+        userId = user.UserId,
+        username = user.Username
+    };
+}
 }
