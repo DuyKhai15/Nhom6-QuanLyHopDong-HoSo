@@ -1,1 +1,7 @@
-# TODO: cau hinh Docker o giai doan trien khai
+services:
+  backend:
+    build:
+      context: ./backend/Sprint3/QLHopDongHoSo.API
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
