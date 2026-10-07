@@ -1,0 +1,52 @@
+name: Backend CI
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+
+  pull_request:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore "backend/sprint3/QLHopDongHoSo.API/QLHopDongHoSo.API.slnx"
+
+      - name: Build
+        run: dotnet build "backend/sprint3/QLHopDongHoSo.API/QLHopDongHoSo.API.slnx" --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test "backend/sprint3/QLHopDongHoSo.API/QLHopDongHoSo.API.slnx" --configuration Release --no-build
+
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend/sprint3/QLHopDongHoSo.API
+          file: ./backend/sprint3/QLHopDongHoSo.API/Dockerfile
+          push: false
+          tags: ql-hopdong-api:ci

@@ -438,3 +438,5 @@ appsettings.Local.json
 node_modules/
 dist/
 build/
+# Uploaded document files
+backend/sprint3/QLHopDongHoSo.API/QLHopDongHoSo.API/Storage/Documents/*
